@@ -23,7 +23,7 @@ def itqwt(w: np.ndarray, q: float, redundancy: float, n: int) -> np.ndarray:
         Time-domain signal
 
     """
-    w = np.array(w, dtype=np.object)  # behaving sort of like a cell array in matlab
+    w = np.array(w, dtype=object)  # behaving sort of like a cell array in matlab
 
     # scaling factors
     beta = 2.0 / (q + 1)

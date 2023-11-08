@@ -85,8 +85,8 @@ class DualQDecomposition:
 
         n = x.shape[0]
         w1, w2 = self.tqwt1(x), self.tqwt2(x)
-        d1, d2 = (np.array([np.zeros(s.shape, s.dtype) for s in w], dtype=np.object) for w in [w1, w2])
-        u1, u2 = (np.array([np.zeros(s.shape, s.dtype) for s in w], dtype=np.object) for w in [w1, w2])
+        d1, d2 = (np.array([np.zeros(s.shape, s.dtype) for s in w], dtype=object) for w in [w1, w2])
+        u1, u2 = (np.array([np.zeros(s.shape, s.dtype) for s in w], dtype=object) for w in [w1, w2])
         t1 = self._lambda_1 * compute_wavelet_norms(n, self._q1, self._redundancy_1, self._stages_1) / (2 * self._mu)
         t2 = self._lambda_2 * compute_wavelet_norms(n, self._q2, self._redundancy_2, self._stages_2) / (2 * self._mu)
 

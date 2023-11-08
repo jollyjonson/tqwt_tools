@@ -11,7 +11,7 @@ def compute_wavelets(n: int, q: float, redundancy: float, stages: int) -> np.nda
 
     n_zeros = np.zeros(n)
     wavelet_shaped_zeros = tqwt(n_zeros, q, redundancy, stages)
-    wavelets = np.array([None for _ in range(stages + 1)], dtype=np.object)
+    wavelets = np.array([None for _ in range(stages + 1)], dtype=object)
 
     for j_i in range(stages + 1):
         w = deepcopy(wavelet_shaped_zeros)
