@@ -28,7 +28,7 @@ class TestTQWT(unittest.TestCase):
 
     def test_afb(self):
         """Check the analysis filter bank function in a simple case against hard-coded Matlab results"""
-        v0, v1 = analysis_filter_bank(np.arange(20).astype(np.float), 16, 12)
+        v0, v1 = analysis_filter_bank(np.arange(20).astype(float), 16, 12)
         npt.assert_allclose(EXPECTEDV0, v0)
         npt.assert_allclose(EXPECTEDV1, v1)
 
