@@ -77,10 +77,9 @@ class TestPerfectReconstruction(unittest.TestCase):
         n = speech_signal().shape[0]
         w = tqwt(x, q, r, j)                      # wavelet transform
         y = itqwt(w, q, r, n)                     # inverse wavelet transform
-        reconstruction_error_lin = max(abs(x - y))
-        reconstruction_error_db = 20 * np.log10(reconstruction_error_lin)
-        self.assertLess(reconstruction_error_db,  -290)
-        print("[TestPerfectReconstruction] Reconstrucion Error: ", reconstruction_error_db, "dB")
+        max_reconstruction_error_db = 20 * np.log10(max(abs(x - y)))
+        self.assertLess(max_reconstruction_error_db,  -290)
+        print("[TestPerfectReconstruction] Reconstrucion Error: ", max_reconstruction_error_db, "dB")
 
 
 if __name__ == '__main__':
