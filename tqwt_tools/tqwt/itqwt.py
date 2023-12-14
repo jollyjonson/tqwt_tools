@@ -23,7 +23,7 @@ def itqwt(w: np.ndarray, q: float, redundancy: float, n: int) -> np.ndarray:
         Time-domain signal
 
     """
-    w = np.array(w, dtype=np.object)  # behaving sort of like a cell array in matlab
+    w = np.array(w, dtype=object)  # behaving sort of like a cell array in matlab
 
     # scaling factors
     beta = 2.0 / (q + 1)
@@ -65,7 +65,7 @@ def synthesis_filter_bank(lp_subband: np.ndarray, hp_subband: np.ndarray, n: int
     trans = (1 + np.cos(v)) * np.sqrt(2 - np.cos(v)) / 2
 
     # low-pass subband
-    y0 = np.zeros(n, dtype=np.complex)
+    y0 = np.zeros(n, dtype=complex)
     y0[0] = lp_subband[0]                                       # DC-term
     y0[1:p+1] = lp_subband[1:p + 1]                               # passband
     y0[1+p:p+t+1] = lp_subband[1 + p:p + t + 1] * trans               # transition-band
@@ -77,7 +77,7 @@ def synthesis_filter_bank(lp_subband: np.ndarray, hp_subband: np.ndarray, n: int
     y0[n-p:] = lp_subband[n0 - p:]                                # passband (negative frequency)
 
     # high-pass subband
-    y1 = np.zeros(n, dtype=np.complex)
+    y1 = np.zeros(n, dtype=complex)
     y1[0] = 0                                                 # DC-term
     y1[1:p+1] = np.zeros(p)                                   # stop-band
     y1[1+p:t+p+1] = hp_subband[1:t + 1] * np.flip(trans)          # transition-band

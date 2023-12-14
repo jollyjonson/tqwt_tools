@@ -21,14 +21,14 @@ EXPECTEDV1 = np.array([0, 1.20476410303436, 4.24264068711929, 6.79375780947761, 
                        12.6169787890298, 9.89949493661167, 3.61429230910309])
 EXPECTEDY = np.array([0, 1, 2, 3, 4, 5, 9.283601844998817, 17.507536716885582, 23.775413799563122, 25.131037888449338,
                       25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37.296444516289142, 37.790891865207485,
-                      31.014025662207025, 20.061288372791118, 15, 16, 17, 18, 19], dtype=np.complex)
+                      31.014025662207025, 20.061288372791118, 15, 16, 17, 18, 19], dtype=complex)
 
 
 class TestTQWT(unittest.TestCase):
 
     def test_afb(self):
         """Check the analysis filter bank function in a simple case against hard-coded Matlab results"""
-        v0, v1 = analysis_filter_bank(np.arange(20).astype(np.float), 16, 12)
+        v0, v1 = analysis_filter_bank(np.arange(20).astype(float), 16, 12)
         npt.assert_allclose(EXPECTEDV0, v0)
         npt.assert_allclose(EXPECTEDV1, v1)
 
@@ -77,10 +77,9 @@ class TestPerfectReconstruction(unittest.TestCase):
         n = speech_signal().shape[0]
         w = tqwt(x, q, r, j)                      # wavelet transform
         y = itqwt(w, q, r, n)                     # inverse wavelet transform
-        reconstruction_error_lin = max(abs(x - y))
-        reconstruction_error_db = 20 * np.log10(reconstruction_error_lin)
-        self.assertLess(reconstruction_error_db,  -290)
-        print("[TestPerfectReconstruction] Reconstrucion Error: ", reconstruction_error_db, "dB")
+        max_reconstruction_error_db = 20 * np.log10(max(abs(x - y)))
+        self.assertLess(max_reconstruction_error_db,  -290)
+        print("[TestPerfectReconstruction] Reconstrucion Error: ", max_reconstruction_error_db, "dB")
 
 
 if __name__ == '__main__':

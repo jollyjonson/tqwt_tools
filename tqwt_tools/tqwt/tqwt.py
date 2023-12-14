@@ -79,7 +79,7 @@ def tqwt(x: np.ndarray, q: float, redundancy: float, stages: int) -> np.ndarray:
         w.append(ifft(w_subband) * np.sqrt(len(w_subband)))  # inverse unitary DFT
 
     w.append(ifft(fft_of_x) * np.sqrt(len(fft_of_x)))      # inverse unitary DFT
-    return np.array(w, dtype=np.object)
+    return np.array(w, dtype=object)
 
 
 def analysis_filter_bank(x: np.ndarray, n0: int, n1: int) -> Tuple[np.ndarray, np.ndarray]:
