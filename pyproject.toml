@@ -20,3 +20,6 @@ dev = [
 [build-system]
 requires = ['setuptools']
 build-backend = 'setuptools.build_meta'
+
+[tool.ruff]
+lint.ignore = ["F401"]
