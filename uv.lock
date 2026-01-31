@@ -440,11 +440,6 @@ dependencies = [
     { name = "typeguard" },
 ]
 
-[package.optional-dependencies]
-test = [
-    { name = "pytest" },
-]
-
 [package.dev-dependencies]
 dev = [
     { name = "pytest" },
@@ -453,12 +448,10 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "numpy", specifier = ">=1.26" },
-    { name = "pytest", marker = "extra == 'test'", specifier = ">=9.0.2" },
     { name = "scipy", specifier = ">=1.10" },
     { name = "sortedcontainers", specifier = ">=2.4" },
     { name = "typeguard", specifier = ">=4" },
 ]
-provides-extras = ["test"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=9.0.2" }]
