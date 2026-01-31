@@ -53,7 +53,9 @@ def tqwt(x: np.ndarray, q: float, redundancy: float, stages: int) -> np.ndarray:
     """
     check_params(q, redundancy, stages)
     if x.shape[0] % 2 or len(x.shape) != 1:
-        raise ValueError("Input signal x needs to be one dimensional and of even length!")
+        raise ValueError(
+            "Input signal x needs to be one dimensional and of even length!"
+        )
     x = np.asarray(x)
 
     beta = float(2 / (q + 1))
@@ -64,25 +66,29 @@ def tqwt(x: np.ndarray, q: float, redundancy: float, stages: int) -> np.ndarray:
 
     if stages > max_num_stages:
         if max_num_stages > 0:
-            raise ValueError("Too many subbands, reduce subbands to " + str(max_num_stages))
+            raise ValueError(
+                "Too many subbands, reduce subbands to " + str(max_num_stages)
+            )
         else:
             raise ValueError("Too many subbands specified, increase signal length")
 
     fft_of_x = fft(x) / np.sqrt(n)  # unitary DFT
 
-    w = []                          # init list of wavelet coefficients
+    w = []  # init list of wavelet coefficients
 
     for subband_idx in range(1, stages + 1):
-        n0 = 2 * round(alpha ** subband_idx * n / 2)
+        n0 = 2 * round(alpha**subband_idx * n / 2)
         n1 = 2 * round(beta * alpha ** (subband_idx - 1) * n / 2)
         fft_of_x, w_subband = analysis_filter_bank(fft_of_x, n0, n1)
         w.append(ifft(w_subband) * np.sqrt(len(w_subband)))  # inverse unitary DFT
 
-    w.append(ifft(fft_of_x) * np.sqrt(len(fft_of_x)))      # inverse unitary DFT
+    w.append(ifft(fft_of_x) * np.sqrt(len(fft_of_x)))  # inverse unitary DFT
     return np.array(w, dtype=object)
 
 
-def analysis_filter_bank(x: np.ndarray, n0: int, n1: int) -> Tuple[np.ndarray, np.ndarray]:
+def analysis_filter_bank(
+    x: np.ndarray, n0: int, n1: int
+) -> Tuple[np.ndarray, np.ndarray]:
     """
     Two-channel analysis filter bank operating on a frequency domain input x. This function is used
     iteratively by `tqwt`.
@@ -104,33 +110,43 @@ def analysis_filter_bank(x: np.ndarray, n0: int, n1: int) -> Tuple[np.ndarray, n
         high-pass output of the filter bank in the frequency domain
     """
     x = np.array(x)
-    n = x.shape[0]                  # len(x)
+    n = x.shape[0]  # len(x)
 
-    p = int((n-n1) / 2)             # pass-band
+    p = int((n - n1) / 2)  # pass-band
     t = int((n0 + n1 - n) / 2 - 1)  # transition-band
-    s = int((n - n0) / 2)           # stop-band
+    s = int((n - n0) / 2)  # stop-band
 
     # transition band function
-    v = np.arange(start=1, stop=t+1) / (t+1) * np.pi
+    v = np.arange(start=1, stop=t + 1) / (t + 1) * np.pi
     transit_band = (1 + np.cos(v)) * np.sqrt(2 - np.cos(v)) / 2.0
 
     # low-pass subband
     lp_subband = np.zeros(n0, dtype=x.dtype)
-    lp_subband[0] = x[0]                                                  # DC-term
-    lp_subband[1:p+1] = x[1:p + 1]                                        # pass-band
-    lp_subband[1+p:p+t+1] = x[1 + p:p + t + 1] * transit_band             # transition-band
-    lp_subband[int(n0 / 2)] = 0                                           # nyquist
-    lp_subband[n0-p-t:n0-p] = x[n - p - t:n - p] * np.flip(transit_band)  # transition-band (negative frequencies)
-    lp_subband[n0-p:] = x[n - p:]                                         # pass-band (negative frequencies)
+    lp_subband[0] = x[0]  # DC-term
+    lp_subband[1 : p + 1] = x[1 : p + 1]  # pass-band
+    lp_subband[1 + p : p + t + 1] = (
+        x[1 + p : p + t + 1] * transit_band
+    )  # transition-band
+    lp_subband[int(n0 / 2)] = 0  # nyquist
+    lp_subband[n0 - p - t : n0 - p] = x[n - p - t : n - p] * np.flip(
+        transit_band
+    )  # transition-band (negative frequencies)
+    lp_subband[n0 - p :] = x[n - p :]  # pass-band (negative frequencies)
 
     # high-pass subband
     hp_subband = np.zeros(n1, dtype=x.dtype)
-    hp_subband[0] = 0                                                     # DC-term
-    hp_subband[1:t+1] = x[1 + p:t + p + 1] * np.flip(transit_band)        # transition-band
-    hp_subband[t+1:s+1+t] = x[p + t + 1:p + t + s + 1]                    # pass-band
-    if n // 2 == 0:                                                       # nyquist if N is even
-        hp_subband[n1/2] = x[n / 2]
-    hp_subband[n1-t-s-1:n1-t] = x[n - p - t - s - 1:n - p - t]            # pass-band (negative frequencies)
-    hp_subband[n1-t:n1] = x[n - p - t:n - p] * transit_band               # transition-band (negative frequencies)
+    hp_subband[0] = 0  # DC-term
+    hp_subband[1 : t + 1] = x[1 + p : t + p + 1] * np.flip(
+        transit_band
+    )  # transition-band
+    hp_subband[t + 1 : s + 1 + t] = x[p + t + 1 : p + t + s + 1]  # pass-band
+    if n // 2 == 0:  # nyquist if N is even
+        hp_subband[n1 / 2] = x[n / 2]
+    hp_subband[n1 - t - s - 1 : n1 - t] = x[
+        n - p - t - s - 1 : n - p - t
+    ]  # pass-band (negative frequencies)
+    hp_subband[n1 - t : n1] = (
+        x[n - p - t : n - p] * transit_band
+    )  # transition-band (negative frequencies)
 
     return lp_subband, hp_subband

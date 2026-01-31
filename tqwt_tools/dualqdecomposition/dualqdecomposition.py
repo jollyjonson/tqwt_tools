@@ -41,9 +41,20 @@ class DualQDecomposition:
 
     """
 
-    def __init__(self, q1: float, redundancy_1: float, stages_1: int, q2: float, redundancy_2: float, stages_2: int,
-                 lambda_1: float, lambda_2: float, mu: float, num_iterations: int,
-                 compute_cost_function: bool = False):
+    def __init__(
+        self,
+        q1: float,
+        redundancy_1: float,
+        stages_1: int,
+        q2: float,
+        redundancy_2: float,
+        stages_2: int,
+        lambda_1: float,
+        lambda_2: float,
+        mu: float,
+        num_iterations: int,
+        compute_cost_function: bool = False,
+    ):
         # parameters of the first transform, define (i)tqwt lambdas
         self._q1 = q1
         self._redundancy_1 = redundancy_1
@@ -85,13 +96,26 @@ class DualQDecomposition:
 
         n = x.shape[0]
         w1, w2 = self.tqwt1(x), self.tqwt2(x)
-        d1, d2 = (np.array([np.zeros(s.shape, s.dtype) for s in w], dtype=object) for w in [w1, w2])
-        u1, u2 = (np.array([np.zeros(s.shape, s.dtype) for s in w], dtype=object) for w in [w1, w2])
-        t1 = self._lambda_1 * compute_wavelet_norms(n, self._q1, self._redundancy_1, self._stages_1) / (2 * self._mu)
-        t2 = self._lambda_2 * compute_wavelet_norms(n, self._q2, self._redundancy_2, self._stages_2) / (2 * self._mu)
+        d1, d2 = (
+            np.array([np.zeros(s.shape, s.dtype) for s in w], dtype=object)
+            for w in [w1, w2]
+        )
+        u1, u2 = (
+            np.array([np.zeros(s.shape, s.dtype) for s in w], dtype=object)
+            for w in [w1, w2]
+        )
+        t1 = (
+            self._lambda_1
+            * compute_wavelet_norms(n, self._q1, self._redundancy_1, self._stages_1)
+            / (2 * self._mu)
+        )
+        t2 = (
+            self._lambda_2
+            * compute_wavelet_norms(n, self._q2, self._redundancy_2, self._stages_2)
+            / (2 * self._mu)
+        )
 
         for iter_idx in range(self._num_iterations):
-
             for j in range(self._stages_1 + 1):
                 u1[j] = self.soft_threshold(w1[j] + d1[j], t1[j]) - d1[j]
             for j in range(self._stages_2 + 1):
@@ -112,7 +136,7 @@ class DualQDecomposition:
 
     @staticmethod
     def soft_threshold(x: np.ndarray, thresh: float) -> np.ndarray:
-        y = np.abs(x)-thresh
+        y = np.abs(x) - thresh
         y[np.where(y < 0)] = 0
         return y / (y + thresh) * x
 
