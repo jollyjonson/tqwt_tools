@@ -1,7 +1,6 @@
 import os
 import unittest
 
-import matplotlib.pyplot as plt
 import numpy as np
 import numpy.testing as npt
 from scipy.io.matlab import loadmat
@@ -41,24 +40,6 @@ class TestTQWT(unittest.TestCase):
         for subband, subband_matlab in zip(w, np.squeeze(w_matlab)):
             npt.assert_allclose(np.imag(subband), 0, atol=1e-14)
             npt.assert_allclose(np.real_if_close(subband).astype(np.float32), np.squeeze(subband_matlab))
-
-    def test_tqwt_with_audio(self) -> None:
-        """Test the TQWT with audio material"""
-
-        #sine = np.cos(2 * np.pi * 1000 / 16000 * np.arange(48000))
-        #wAudio = tqwt.tqwt(sine, 8, 2, 32)
-
-        #start = time()
-        #wAudio = tqwt.tqwt(self.audio, 10, 1.5, 67)
-        #print("Runtime: ", time()-start)
-
-        # # plot the resulting spectrogram by resampling each subband
-        # spectrogram = np.zeros((wAudio.shape[0], self.audio.shape[0]), dtype=np.complex)
-        # for idx, subband in enumerate(wAudio):
-        #     spectrogram[idx, :] = resample(subband, self.audio.shape[0])
-        # plt.imshow(20*np.log10(1e-8+np.abs(spectrogram)), aspect='auto')
-        # plt.yticks([]); plt.xticks([])
-        # plt.show()
 
 
 class TestITQWT(unittest.TestCase):
